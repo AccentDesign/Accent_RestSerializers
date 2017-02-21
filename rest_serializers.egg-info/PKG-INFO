@@ -1,0 +1,64 @@
+Metadata-Version: 1.1
+Name: rest-serializers
+Version: 0.0.1
+Summary: Additional serializers for django rest framework
+Home-page: https://github.com/AccentDesign/Accent_RestSerializers
+Author: Stuart George
+Author-email: stuart@accentdesign.com
+License: MIT
+Download-URL: https://github.com/AccentDesign/Accent_RestSerializers/releases/tag/0.0.1
+Description: *****************
+        Accent_SoftDelete
+        *****************
+        
+        |Build_Status| |Coverage_Status|
+        
+        .. |Build_Status| image:: https://circleci.com/gh/AccentDesign/Accent_RestSerializers.svg?style=svg
+           :target: https://circleci.com/gh/AccentDesign/Accent_RestSerializers
+        .. |Coverage_Status| image:: http://img.shields.io/coveralls/AccentDesign/Accent_RestSerializers/master.svg
+           :target: https://coveralls.io/r/AccentDesign/Accent_RestSerializers?branch=master
+        
+        Description
+        ***********
+        
+        Rest Framework serializer that supports updating of many to many fields for django
+        
+        
+        Getting Started
+        ***************
+        
+        Installation::
+        
+           pip install git+https://github.com/AccentDesign/Accent_RestSerializers.git@master#egg=rest_serializers
+        
+        settings.py::
+        
+           INSTALLED_APPS = [
+               ...
+               'rest_serializers',
+               ...
+           ]
+        
+        
+        Usage
+        *****
+        
+        Model defs::
+        
+           from rest_serializers.serializers import ManyToManySerializer
+        
+Keywords: django,rest,framework,serializers
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 1.8
+Classifier: Framework :: Django :: 1.9
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Topic :: Internet :: WWW/HTTP
