@@ -23,7 +23,8 @@ class ManyToManySerializer(ModelSerializer):
 
             instance = model_class.objects.create(**validated_data)
 
-            # save or delete many-to-many relationships after the instance is created.
+            # save or delete many-to-many relationships after the instance is
+            # created.
             if many_to_many:
                 for field_name, value in many_to_many.items():
                     set_many(instance, field_name, value)

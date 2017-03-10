@@ -25,7 +25,8 @@ def delete_obsolete_many(instance, attr, value):
     primary_key = related_manager.model._meta.pk
 
     # get a list of primary keys in validated data that we want to keep
-    pks = [item.get(primary_key.name) for item in value if item.get(primary_key.name)]
+    pks = [item.get(primary_key.name)
+           for item in value if item.get(primary_key.name)]
 
     # delete any existing many-to-many that are not wanted
     related_manager.exclude(pk__in=pks).delete()
@@ -38,7 +39,8 @@ def update_or_create_many(instance, attr, value):
     # find the primary key for the joining table
     primary_key = related_manager.model._meta.pk
 
-    # loop data and either update if we have been passed a primary key or create one if we have not
+    # loop data and either update if we have been passed a primary key or
+    # create one if we have not
     for item in value:
 
         # remove many-to-many relationships from validated_data as they
@@ -49,7 +51,8 @@ def update_or_create_many(instance, attr, value):
                 many_to_many[field_name] = item.pop(field_name)
 
         # id of the item if there is one
-        item_pk = item.pop(primary_key.name) if item.get(primary_key.name) else None
+        item_pk = item.pop(primary_key.name) if item.get(
+            primary_key.name) else None
 
         # if we have an id we need to update it otherwise create it
         if item_pk:
@@ -60,7 +63,8 @@ def update_or_create_many(instance, attr, value):
         else:
             related_object = related_manager.create(**item)
 
-        # save or delete many-to-many relationships after the instance is created.
+        # save or delete many-to-many relationships after the instance is
+        # created.
         if many_to_many:
             for field_name, value in many_to_many.items():
                 set_many(related_object, field_name, value)

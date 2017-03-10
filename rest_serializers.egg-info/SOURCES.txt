@@ -2,7 +2,9 @@ LICENSE
 MANIFEST.in
 README.rst
 rest_serializers/__init__.py
+rest_serializers/exception_handlers.py
 rest_serializers/serializers.py
+rest_serializers/utils.py
 rest_serializers.egg-info/PKG-INFO
 rest_serializers.egg-info/SOURCES.txt
 rest_serializers.egg-info/dependency_links.txt
