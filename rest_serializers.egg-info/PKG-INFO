@@ -1,12 +1,12 @@
 Metadata-Version: 1.1
 Name: rest-serializers
-Version: 0.0.1
+Version: 0.0.3
 Summary: Additional serializers for django rest framework
 Home-page: https://github.com/AccentDesign/Accent_RestSerializers
 Author: Stuart George
 Author-email: stuart@accentdesign.com
 License: MIT
-Download-URL: https://github.com/AccentDesign/Accent_RestSerializers/releases/tag/0.0.1
+Download-URL: https://github.com/AccentDesign/Accent_RestSerializers/releases/tag/0.0.3
 Description: *****************
         Accent_SoftDelete
         *****************

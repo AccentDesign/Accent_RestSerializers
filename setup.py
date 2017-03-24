@@ -2,13 +2,13 @@ from setuptools import setup
 
 setup(
     name='rest-serializers',
-    version='0.0.2',
+    version='0.0.3',
     description='Additional serializers for django rest framework',
     long_description=open('README.rst').read(),
     author='Stuart George',
     author_email='stuart@accentdesign.com',
     url='https://github.com/AccentDesign/Accent_RestSerializers',
-    download_url='https://github.com/AccentDesign/Accent_RestSerializers/releases/tag/0.0.2',
+    download_url='https://github.com/AccentDesign/Accent_RestSerializers/releases/tag/0.0.3',
     license='MIT',
     packages=[
         'rest_serializers'
