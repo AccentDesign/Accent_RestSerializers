@@ -5,7 +5,24 @@ from rest_framework.utils import model_meta
 from .utils import set_many
 
 
-class ManyToManySerializer(ModelSerializer):
+class EagerLoadingMixin(object):
+    SELECT_RELATED_FIELDS = []
+    PREFETCH_RELATED_FIELDS = []
+
+    @classmethod
+    def setup_eager_loading(cls, queryset):
+        if hasattr(cls, "SELECT_RELATED_FIELDS"):
+            queryset = queryset.select_related(*cls.SELECT_RELATED_FIELDS)
+        if hasattr(cls, "PREFETCH_RELATED_FIELDS"):
+            queryset = queryset.prefetch_related(*cls.PREFETCH_RELATED_FIELDS)
+        return queryset
+
+
+class EagerModelSerializer(EagerLoadingMixin, ModelSerializer):
+    pass
+
+
+class ManyToManySerializer(EagerModelSerializer):
 
     def create(self, validated_data):
         model_class = self.Meta.model
