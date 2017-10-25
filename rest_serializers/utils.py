@@ -1,4 +1,3 @@
-from rest_framework.compat import set_many as rest_set_many
 from rest_framework.utils import model_meta
 
 
@@ -15,7 +14,8 @@ def set_many(instance, field, value):
         update_or_create_many(instance, field, value)
     else:
         # if not we need to just treat it as a normal m2m
-        rest_set_many(instance, field, value)
+        field = getattr(instance, field)
+        field.set(value)
 
 
 def delete_obsolete_many(instance, attr, value):
