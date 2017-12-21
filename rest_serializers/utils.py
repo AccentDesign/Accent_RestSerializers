@@ -1,3 +1,4 @@
+from django.db import connection, transaction
 from rest_framework.utils import model_meta
 
 
@@ -16,6 +17,12 @@ def set_many(instance, field, value):
         # if not we need to just treat it as a normal m2m
         field = getattr(instance, field)
         field.set(value)
+
+
+def set_rollback():
+    atomic_requests = connection.settings_dict.get('ATOMIC_REQUESTS', False)
+    if atomic_requests and connection.in_atomic_block:
+        transaction.set_rollback(True)
 
 
 def delete_obsolete_many(instance, attr, value):

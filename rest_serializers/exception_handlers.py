@@ -3,9 +3,10 @@ from django.utils import six
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import status
-from rest_framework.compat import set_rollback
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
+
+from rest_serializers.utils import set_rollback
 
 
 def protected_entities_handler(exc, context):
