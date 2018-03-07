@@ -11,9 +11,9 @@ class EagerLoadingMixin(object):
 
     @classmethod
     def setup_eager_loading(cls, queryset):
-        if hasattr(cls, "SELECT_RELATED_FIELDS"):
+        if cls.SELECT_RELATED_FIELDS:
             queryset = queryset.select_related(*cls.SELECT_RELATED_FIELDS)
-        if hasattr(cls, "PREFETCH_RELATED_FIELDS"):
+        if cls.PREFETCH_RELATED_FIELDS:
             queryset = queryset.prefetch_related(*cls.PREFETCH_RELATED_FIELDS)
         return queryset
 
