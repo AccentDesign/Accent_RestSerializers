@@ -1,65 +1,24 @@
 from django.db import transaction
 from rest_framework.serializers import ModelSerializer
-from rest_framework.utils import model_meta
 
-from .utils import set_many
-
-
-class EagerLoadingMixin(object):
-    SELECT_RELATED_FIELDS = []
-    PREFETCH_RELATED_FIELDS = []
-
-    @classmethod
-    def setup_eager_loading(cls, queryset):
-        if cls.SELECT_RELATED_FIELDS:
-            queryset = queryset.select_related(*cls.SELECT_RELATED_FIELDS)
-        if cls.PREFETCH_RELATED_FIELDS:
-            queryset = queryset.prefetch_related(*cls.PREFETCH_RELATED_FIELDS)
-        return queryset
+from .mixins import (
+    EagerLoadingMixin,
+    NestedCreateMixin,
+    NestedUpdateMixin
+)
 
 
 class EagerModelSerializer(EagerLoadingMixin, ModelSerializer):
-    pass
+    """ Serializer that includes the select and prefetch related """
 
 
-class ManyToManySerializer(EagerModelSerializer):
+class ManyToManySerializer(EagerModelSerializer, NestedCreateMixin, NestedUpdateMixin):
+    """ Serializer that includes the select, prefetch related and nestable writing """
 
+    @transaction.atomic
     def create(self, validated_data):
-        model_class = self.Meta.model
-        info = model_meta.get_field_info(model_class)
+        return super().create(validated_data)
 
-        # enable atomic so can rollback
-        with transaction.atomic():
-
-            # remove many-to-many relationships from validated_data as they
-            # need to be created once the instance is saved
-            many_to_many = {}
-            for field_name, relation_info in info.relations.items():
-                if relation_info.to_many and (field_name in validated_data):
-                    many_to_many[field_name] = validated_data.pop(field_name)
-
-            instance = model_class.objects.create(**validated_data)
-
-            # save or delete many-to-many relationships after the instance is
-            # created.
-            if many_to_many:
-                for field_name, value in many_to_many.items():
-                    set_many(instance, field_name, value)
-
-        return instance
-
+    @transaction.atomic
     def update(self, instance, validated_data):
-        info = model_meta.get_field_info(instance)
-
-        # enable atomic so can rollback
-        with transaction.atomic():
-
-            for attr, value in validated_data.items():
-                if attr in info.relations and info.relations[attr].to_many:
-                    set_many(instance, attr, value)
-                else:
-                    setattr(instance, attr, value)
-
-            instance.save()
-
-        return instance
+        return super().update(instance, validated_data)
