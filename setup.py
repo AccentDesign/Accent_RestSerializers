@@ -1,14 +1,14 @@
 from setuptools import setup
+from rest_serializers import __version__
 
 setup(
-    name='rest-serializers',
-    version='0.0.3',
+    name='rest_serializers',
+    version=__version__,
     description='Additional serializers for django rest framework',
     long_description=open('README.rst').read(),
     author='Stuart George',
     author_email='stuart@accentdesign.com',
     url='https://github.com/AccentDesign/Accent_RestSerializers',
-    download_url='https://github.com/AccentDesign/Accent_RestSerializers/releases/tag/0.0.3',
     license='MIT',
     packages=[
         'rest_serializers'
@@ -23,9 +23,6 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 1.8',
-        'Framework :: Django :: 1.9',
-        'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 2.0',
         'Intended Audience :: Developers',
