@@ -2,10 +2,12 @@ from collections import OrderedDict, defaultdict
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import FieldDoesNotExist
+from django.db.models import FieldDoesNotExist, ForeignKey
 from django.db.models.fields.related import ForeignObjectRel
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
+
+from rest_serializers.validators import LazyUniqueTogetherValidator
 
 
 class BaseNestedModelSerializer(serializers.ModelSerializer):
@@ -58,13 +60,6 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
             related_field.object_id_field_name: instance.pk,
         }
 
-    def _get_serializer_for_field(self, field, **kwargs):
-        kwargs.update({
-            'context': self.context,
-            'partial': self.partial
-        })
-        return field.__class__(**kwargs)
-
     def _get_related_field(self, field):
         model_class = self.Meta.model
 
@@ -89,6 +84,21 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
             return str(pk)
 
         return None
+
+    def _get_serializer_field(self, field, instance):
+        if isinstance(field, ForeignKey):
+            new_field = serializers.PrimaryKeyRelatedField(
+                queryset=field.related_model._default_manager.get_queryset(),
+                default=instance.pk
+            )
+            return new_field
+
+    def _get_serializer_for_field(self, field, **kwargs):
+        kwargs.update({
+            'context': self.context,
+            'partial': self.partial
+        })
+        return field.__class__(**kwargs)
 
     def prefetch_related_instances(self, field, related_data):
         model_class = field.Meta.model
@@ -135,6 +145,16 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
             for data in related_data:
                 obj = instances.get(self._get_related_pk(data, field.Meta.model))
                 serializer = self._get_serializer_for_field(field, instance=obj, data=data)
+
+                # If the LazyUniqueTogetherValidator is being used it means there is a unique together,
+                # and one field of the related instances is missing and is the current instance.
+                # This can only be validated post save so its done here.
+                # We need to dynamically add the field to the serializer so it can validated
+                if LazyUniqueTogetherValidator in [v.__class__ for v in serializer.validators]:
+                    missing_field = self._get_serializer_field(related_field, instance)
+                    if missing_field:
+                        serializer.fields[related_field.name] = missing_field
+
                 serializer.is_valid(raise_exception=True)
                 related_instance = serializer.save(**save_kwargs)
                 data['pk'] = related_instance.pk

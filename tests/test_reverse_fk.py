@@ -6,7 +6,6 @@ from tests.models import Child, Parent
 
 
 class ChildSerializer(serializers.ModelSerializer):
-    id = serializers.ModelField(model_field=Child()._meta.get_field('id'), required=False, allow_null=True)
 
     class Meta:
         model = Child

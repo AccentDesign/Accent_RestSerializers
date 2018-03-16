@@ -17,6 +17,7 @@ class Child(models.Model):
     class Meta:
         app_label = 'tests'
         ordering = ('name', )
+        unique_together = ('name', 'parent')
 
 
 class Toy(models.Model):

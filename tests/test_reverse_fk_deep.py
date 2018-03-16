@@ -7,15 +7,12 @@ from tests.models import Child, Parent, Toy
 
 
 class ToySerializer(serializers.ModelSerializer):
-    id = serializers.ModelField(model_field=Toy()._meta.get_field('id'), required=False)
-
     class Meta:
         model = Toy
         fields = ('id', 'name')
 
 
 class ChildSerializer(ManyToManySerializer):
-    id = serializers.ModelField(model_field=Child()._meta.get_field('id'), required=False)
     toys = ToySerializer(many=True)
 
     class Meta:
