@@ -45,8 +45,7 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
                         continue
 
                 validated_data.pop(field.source)
-                # Reversed one-to-one looks like direct foreign keys but they
-                # are reverse relations
+                # Reversed one-to-one looks like direct foreign keys but they are reverse relations
                 if direct:
                     relations[field_name] = (field, field.source)
                 else:
