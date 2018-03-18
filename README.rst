@@ -1,6 +1,6 @@
-*****************
-Accent_SoftDelete
-*****************
+**********************
+Accent_RestSerializers
+**********************
 
 |Build_Status| |Coverage_Status|
 
@@ -42,18 +42,12 @@ ManyToManySerializer:
 
 This class is required in the parent serializer.
 
-The pk field is required implicitly on the child serializer to make sure it exists in the
-validated data in the create and update methods. The name of this must match that of the
-actual field on the model.
-
 Example::
 
     from rest_serializers.serializers import ManyToManySerializer
 
 
     class ChildSerializer(serializers.ModelSerializer):
-         id = serializers.ModelField(model_field=Child()._meta.get_field('id'), required=False, allow_null=True)
-
          class Meta:
             model = Child
             fields = ('id', 'name')
