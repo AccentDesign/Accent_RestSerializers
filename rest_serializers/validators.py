@@ -14,8 +14,8 @@ class LazyUniqueTogetherValidator(serializers.UniqueTogetherValidator):
             if field_name not in attrs:
                 return True
 
-    def __call__(self, attrs):
+    def __call__(self, attrs, serializer):
         # only allow it to continue if all fields are present
         if self.has_missing_fields(attrs):
             return
-        super().__call__(attrs)
+        super().__call__(attrs, serializer)
