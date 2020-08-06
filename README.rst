@@ -2,12 +2,12 @@
 Accent_RestSerializers
 **********************
 
-|Build_Status| |Coverage_Status|
+![Testing workflow](https://github.com/AccentDesign/Accent_RestSerializers/workflows/Testing%20workflow/badge.svg)
 
-.. |Build_Status| image:: https://circleci.com/gh/AccentDesign/Accent_RestSerializers.svg?style=svg
-   :target: https://circleci.com/gh/AccentDesign/Accent_RestSerializers
-.. |Coverage_Status| image:: http://img.shields.io/coveralls/AccentDesign/Accent_RestSerializers/master.svg
-   :target: https://coveralls.io/r/AccentDesign/Accent_RestSerializers?branch=master
+|Build_Status|
+
+.. |Build_Status| image:: https://github.com/AccentDesign/Accent_RestSerializers/workflows/Testing%20workflow/badge.svg
+   :target: https://github.com/AccentDesign/Accent_RestSerializers/workflows/Testing%20workflow
 
 Description
 ***********
