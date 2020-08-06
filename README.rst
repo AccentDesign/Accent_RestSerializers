@@ -2,8 +2,6 @@
 Accent_RestSerializers
 **********************
 
-![Testing workflow](https://github.com/AccentDesign/Accent_RestSerializers/workflows/Testing%20workflow/badge.svg)
-
 |Build_Status|
 
 .. |Build_Status| image:: https://github.com/AccentDesign/Accent_RestSerializers/workflows/Testing%20workflow/badge.svg
