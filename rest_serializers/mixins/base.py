@@ -2,10 +2,15 @@ from collections import OrderedDict, defaultdict
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import FieldDoesNotExist, ForeignKey
+from django.db.models import ForeignKey
 from django.db.models.fields.related import ForeignObjectRel
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
+
+try:
+    from django.db.models import FieldDoesNotExist
+except ImportError:
+    from django.core.exceptions import FieldDoesNotExist
 
 from rest_serializers.validators import LazyUniqueTogetherValidator
 
