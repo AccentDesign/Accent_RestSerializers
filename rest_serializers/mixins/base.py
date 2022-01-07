@@ -4,7 +4,12 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import ForeignKey
 from django.db.models.fields.related import ForeignObjectRel
-from django.utils.translation import ugettext_lazy as _
+
+try:
+    from django.utils.translation import ugettext_lazy as _
+except ImportError:
+    from django.utils.translation import gettext_lazy as _
+
 from rest_framework import serializers
 
 try:
