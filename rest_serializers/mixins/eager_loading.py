@@ -1,5 +1,4 @@
 class EagerLoadingMixin:
-
     SELECT_RELATED_FIELDS = []
     PREFETCH_RELATED_FIELDS = []
 

@@ -34,14 +34,20 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
             except FieldDoesNotExist:
                 continue
 
-            if isinstance(field, serializers.ListSerializer) and isinstance(field.child, serializers.ModelSerializer):
+            if isinstance(field, serializers.ListSerializer) and isinstance(
+                field.child, serializers.ModelSerializer
+            ):
                 if field.source not in validated_data:
                     # Skip field if field is not required
                     continue
 
                 validated_data.pop(field.source)
 
-                reverse_relations[field_name] = (related_field, field.child, field.source)
+                reverse_relations[field_name] = (
+                    related_field,
+                    field.child,
+                    field.source,
+                )
 
             if isinstance(field, serializers.ModelSerializer):
                 if field.source not in validated_data:
@@ -55,7 +61,8 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
                         continue
 
                 validated_data.pop(field.source)
-                # Reversed one-to-one looks like direct foreign keys but they are reverse relations
+                # Reversed one-to-one looks like direct foreign keys
+                # but they are reverse relations
                 if direct:
                     relations[field_name] = (field, field.source)
                 else:
@@ -65,7 +72,9 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
 
     def _get_generic_lookup(self, instance, related_field):
         return {
-            related_field.content_type_field_name: ContentType.objects.get_for_model(instance),
+            related_field.content_type_field_name: ContentType.objects.get_for_model(
+                instance
+            ),
             related_field.object_id_field_name: instance.pk,
         }
 
@@ -75,10 +84,13 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
         try:
             related_field = model_class._meta.get_field(field.source)
         except FieldDoesNotExist:
-            # If `related_name` is not set, field name does not include `_set` -> remove it and check again
-            default_postfix = '_set'
+            # If `related_name` is not set, field name does not
+            # include `_set` -> remove it and check again
+            default_postfix = "_set"
             if field.source.endswith(default_postfix):
-                related_field = model_class._meta.get_field(field.source[:-len(default_postfix)])
+                related_field = model_class._meta.get_field(
+                    field.source[: -len(default_postfix)]
+                )
             else:
                 raise
 
@@ -87,7 +99,7 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
         return related_field, True
 
     def _get_related_pk(self, data, model_class):
-        pk = data.get('pk') or data.get(model_class._meta.pk.attname)
+        pk = data.get("pk") or data.get(model_class._meta.pk.attname)
 
         if pk:
             return str(pk)
@@ -98,15 +110,12 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
         if isinstance(field, ForeignKey):
             new_field = serializers.PrimaryKeyRelatedField(
                 queryset=field.related_model._default_manager.get_queryset(),
-                default=instance.pk
+                default=instance.pk,
             )
             return new_field
 
     def _get_serializer_for_field(self, field, **kwargs):
-        kwargs.update({
-            'context': self.context,
-            'partial': self.partial
-        })
+        kwargs.update({"context": self.context, "partial": self.partial})
         return field.__class__(**kwargs)
 
     def prefetch_related_instances(self, field, related_data):
@@ -127,8 +136,11 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
     def update_or_create_reverse_relations(self, instance, reverse_relations):
         # Update or create reverse relations:
         # many-to-one, many-to-many, reversed one-to-one
-        for field_name, (related_field, field, field_source) in reverse_relations.items():
-
+        for field_name, (
+            related_field,
+            field,
+            field_source,
+        ) in reverse_relations.items():
             # Skip processing for empty data or not-specified field.
             # The field can be defined in validated_data but isn't defined
             # in initial_data (for example, if multipart form data used)
@@ -141,8 +153,8 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
                 # If an object already exists, fill in the pk so
                 # we don't try to duplicate it
                 pk_name = field.Meta.model._meta.pk.attname
-                if pk_name not in related_data and 'pk' in related_data:
-                    pk_name = 'pk'
+                if pk_name not in related_data and "pk" in related_data:
+                    pk_name = "pk"
                 if pk_name not in related_data:
                     related_instance = getattr(instance, field_source, None)
                     if related_instance:
@@ -164,20 +176,26 @@ class BaseNestedModelSerializer(serializers.ModelSerializer):
             new_related_instances = []
             for data in related_data:
                 obj = instances.get(self._get_related_pk(data, field.Meta.model))
-                serializer = self._get_serializer_for_field(field, instance=obj, data=data)
+                serializer = self._get_serializer_for_field(
+                    field, instance=obj, data=data
+                )
 
-                # If the LazyUniqueTogetherValidator is being used it means there is a unique together,
-                # and one field of the related instances is missing and is the current instance.
+                # If the LazyUniqueTogetherValidator is being used it means there i
+                # a unique together, and one field of the related instances is
+                # missing and is the current instance.
                 # This can only be validated post save so its done here.
-                # We need to dynamically add the field to the serializer so it can validated
-                if LazyUniqueTogetherValidator in [v.__class__ for v in serializer.validators]:
+                # We need to dynamically add the field to the serializer so
+                # it can validated
+                if LazyUniqueTogetherValidator in [
+                    v.__class__ for v in serializer.validators
+                ]:
                     missing_field = self._get_serializer_field(related_field, instance)
                     if missing_field:
                         serializer.fields[related_field.name] = missing_field
 
                 serializer.is_valid(raise_exception=True)
                 related_instance = serializer.save(**save_kwargs)
-                data['pk'] = related_instance.pk
+                data["pk"] = related_instance.pk
                 new_related_instances.append(related_instance)
 
             if related_field.many_to_many:

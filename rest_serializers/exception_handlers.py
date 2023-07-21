@@ -19,10 +19,12 @@ def protected_entities_handler(exc, context):
 
     # Now add the HTTP status code to the response.
     if response is not None:
-        response.data['status_code'] = response.status_code
+        response.data["status_code"] = response.status_code
 
     if isinstance(exc, ProtectedError):
         set_rollback()
-        return Response({'detail': _('Protected Error.')}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"detail": _("Protected Error.")}, status=status.HTTP_400_BAD_REQUEST
+        )
 
     return response

@@ -1,4 +1,5 @@
 from collections import OrderedDict
+
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models.fields.related import ForeignObjectRel
 
@@ -28,7 +29,11 @@ class NestedUpdateMixin(BaseNestedModelSerializer):
         reverse_relations = OrderedDict(reversed(list(reverse_relations.items())))
 
         # Delete instances which is missed in data
-        for field_name, (related_field, field, field_source) in reverse_relations.items():
+        for field_name, (
+            related_field,
+            field,
+            field_source,
+        ) in reverse_relations.items():
             model_class = field.Meta.model
 
             related_data = self.initial_data[field_name]
@@ -38,20 +43,20 @@ class NestedUpdateMixin(BaseNestedModelSerializer):
 
             # M2M relation can be as direct or as reverse. For direct relation we
             # should use reverse relation name
-            if related_field.many_to_many and not isinstance(related_field, ForeignObjectRel):
+            if related_field.many_to_many and not isinstance(
+                related_field, ForeignObjectRel
+            ):
                 related_field_lookup = {related_field.remote_field.name: instance}
             elif isinstance(related_field, GenericRelation):
                 related_field_lookup = self._get_generic_lookup(instance, related_field)
             else:
                 related_field_lookup = {related_field.name: instance}
 
-            current_ids = [d.get('pk') for d in related_data if d is not None]
+            current_ids = [d.get("pk") for d in related_data if d is not None]
             pks_to_delete = list(
-                model_class.objects.filter(
-                    **related_field_lookup
-                ).exclude(
-                    pk__in=current_ids
-                ).values_list('pk', flat=True)
+                model_class.objects.filter(**related_field_lookup)
+                .exclude(pk__in=current_ids)
+                .values_list("pk", flat=True)
             )
 
             if related_field.many_to_many:
