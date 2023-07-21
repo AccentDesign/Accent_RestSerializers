@@ -1,5 +1,7 @@
 # Accent_RestSerializers
 
+[![Testing workflow](https://github.com/AccentDesign/Accent_RestSerializers/actions/workflows/test.yml/badge.svg)](https://github.com/AccentDesign/Accent_RestSerializers/actions/workflows/test.yml)
+
 ## Description
 
 Library of useful Rest Framework serializers for django
