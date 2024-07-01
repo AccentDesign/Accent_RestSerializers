@@ -4,4 +4,4 @@ set -e
 set -x
 
 black --check --diff .
-ruff --diff .
+ruff check --diff .
