@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-if [ -d 'dist' ] ; then
-    rm -r dist
-fi
-
-find . | grep -E "(/__pycache__$|\.pyc$|\.pyo$)" | xargs rm -rf

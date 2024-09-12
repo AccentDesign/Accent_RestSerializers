@@ -56,14 +56,43 @@ class ParentSerializer(ManyToManySerializer):
 
 Here the ChildSerializer can also inherit from ManyToManySerializer to include a further depth and so on.
 
-## Auto Code Linting
-
-From the docker container terminal inside /app.
+### Install dependencies
 
 ```bash
-black .
+uv sync --all-extras
 ```
 
+### Run tests
+
 ```bash
-ruff --fix .
+uv run tests/manage.py test
+```
+
+### Run linters
+
+black:
+```bash
+uv run black rest_serializers tests
+```
+
+ruff:
+```bash
+uv run ruff check --fix rest_serializers tests
+```
+
+### Build package
+
+install dependencies:
+```bash
+uv tool install hatch
+```
+
+build package:
+```bash
+uv build
+```
+
+publish package:
+```bash
+uvx twine upload dist/*
 ```

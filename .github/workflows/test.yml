@@ -11,22 +11,31 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: [ "3.9", "3.10", "3.11", "3.12" ]
+      fail-fast: false
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: bash scripts/install
-    - name: Lint
-      run: bash scripts/check
-    - name: Test
-      run: bash scripts/test
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v2
+        with:
+          version: "0.4.9"
+
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Install the project
+        run: uv sync --all-extras
+
+      - name: Run linters
+        run: |
+          uv run black --check --diff rest_serializers tests;
+          uv run ruff check --diff rest_serializers tests;
+
+      - name: Run tests
+        run: uv run tests/manage.py test
