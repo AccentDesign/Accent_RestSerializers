@@ -89,10 +89,11 @@ uv tool install hatch
 
 build package:
 ```bash
-uv build
+rm -rf dist && uv build
 ```
 
-publish package:
+### Publish package
+
 ```bash
-uvx twine upload dist/*
+uv publish --token <token>
 ```
